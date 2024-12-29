@@ -726,7 +726,10 @@ void main () {
     float A = -dot(vPosition, vPosition);
     if (A < -4.0) discard;
     float B = exp(A) * vColor.a;
-    fragColor = vec4(B * vColor.rgb, B);
+
+    float B2 = B > 0.4 ? 1 : 0;
+    fragColor = vec4(B * vColor.rgb, B2);
+    // fragColor = vec4(B * vColor.rgb, B);
 }
 
 `.trim();
@@ -807,15 +810,15 @@ async function main() {
     gl.disable(gl.DEPTH_TEST); // Disable depth testing
 
     // Enable blending
-    gl.disable(gl.BLEND);
-    // gl.enable(gl.BLEND);
-    // gl.blendFuncSeparate(
-    //     gl.ONE_MINUS_DST_ALPHA,
-    //     gl.ONE,
-    //     gl.ONE_MINUS_DST_ALPHA,
-    //     gl.ONE,
-    // );
-    // gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
+    //gl.disable(gl.BLEND);
+    gl.enable(gl.BLEND);
+    gl.blendFuncSeparate(
+        gl.ONE_MINUS_DST_ALPHA,
+        gl.ONE,
+        gl.ONE_MINUS_DST_ALPHA,
+        gl.ONE,
+    );
+    gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
 
     const u_projection = gl.getUniformLocation(program, "projection");
     const u_viewport = gl.getUniformLocation(program, "viewport");
