@@ -807,14 +807,15 @@ async function main() {
     gl.disable(gl.DEPTH_TEST); // Disable depth testing
 
     // Enable blending
-    gl.enable(gl.BLEND);
-    gl.blendFuncSeparate(
-        gl.ONE_MINUS_DST_ALPHA,
-        gl.ONE,
-        gl.ONE_MINUS_DST_ALPHA,
-        gl.ONE,
-    );
-    gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
+    gl.disable(gl.BLEND);
+    // gl.enable(gl.BLEND);
+    // gl.blendFuncSeparate(
+    //     gl.ONE_MINUS_DST_ALPHA,
+    //     gl.ONE,
+    //     gl.ONE_MINUS_DST_ALPHA,
+    //     gl.ONE,
+    // );
+    // gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
 
     const u_projection = gl.getUniformLocation(program, "projection");
     const u_viewport = gl.getUniformLocation(program, "viewport");
