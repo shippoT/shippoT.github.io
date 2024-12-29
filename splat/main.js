@@ -726,9 +726,6 @@ void main () {
     float A = -dot(vPosition, vPosition);
     if (A < -4.0) discard;
     float B = exp(A) * vColor.a;
-
-    // float B2 = B > 0.4 ? 1 : 0;
-    // fragColor = vec4(B * vColor.rgb, B2);
     fragColor = vec4(B * vColor.rgb, B);
 }
 
