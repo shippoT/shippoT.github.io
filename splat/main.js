@@ -583,9 +583,11 @@ function createWorker(self) {
                 scales[0] = Math.exp(attrs.scale_0);
                 scales[1] = Math.exp(attrs.scale_1);
                 scales[2] = Math.exp(attrs.scale_2);
-                scales[0] = scales[0] > 0.1 ? 0.1 : scales[0];
-                scales[1] = scales[1] > 0.1 ? 0.1 : scales[1];
-                scales[2] = scales[2] > 0.1 ? 0.1 : scales[2];
+                if (scales[0] > 0.1 && scales[1] > 0.1) {
+                    scales[0] = 0.001;
+                    scales[1] = 0.001;
+                    scales[2] = 0.001;
+                }
             } else {
                 scales[0] = 0.01;
                 scales[1] = 0.01;
