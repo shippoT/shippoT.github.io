@@ -807,7 +807,6 @@ async function main() {
     gl.disable(gl.DEPTH_TEST); // Disable depth testing
 
     // Enable blending
-    //gl.disable(gl.BLEND);
     gl.enable(gl.BLEND);
     gl.blendFuncSeparate(
         gl.ONE_MINUS_DST_ALPHA,
