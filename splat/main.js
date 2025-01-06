@@ -849,7 +849,8 @@ async function main() {
     gl.bindBuffer(gl.ARRAY_BUFFER, indexBuffer);
     gl.vertexAttribIPointer(a_index, 1, gl.INT, false, 0, 0);
     gl.vertexAttribDivisor(a_index, 1);
-
+    
+    const checkbox = document.getElementById("thresholdToggle");
     const uThresholdEnabledLocation = gl.getUniformLocation(program, "uThresholdEnabled");
 
     gl.uniform1f(uThresholdEnabledLocation, checkbox.checked ? 1.0 : 0.0);
