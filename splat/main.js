@@ -583,21 +583,7 @@ function createWorker(self) {
                 scales[0] = Math.exp(attrs.scale_0);
                 scales[1] = Math.exp(attrs.scale_1);
                 scales[2] = Math.exp(attrs.scale_2);
-                if (scales[0] > 0.5 && scales[1] > 0.5){
-                    scales[0] = 0.00001;
-                    scales[1] = 0.00001;
-                    scales[2] = 0.00001;
-                }
-                if (scales[1] > 0.5 && scales[2] > 0.5){
-                    scales[0] = 0.00001;
-                    scales[1] = 0.00001;
-                    scales[2] = 0.00001;
-                }
-                if (scales[0] > 0.5 && scales[2] > 0.5){
-                    scales[0] = 0.00001;
-                    scales[1] = 0.00001;
-                    scales[2] = 0.00001;
-                }
+                
             } else {
                 scales[0] = 0.01;
                 scales[1] = 0.01;
@@ -607,6 +593,22 @@ function createWorker(self) {
                 rot[1] = 0;
                 rot[2] = 0;
                 rot[3] = 0;
+            }
+            const float tt = 0.4;
+            if (scales[0] > tt && scales[1] > tt){
+                scales[0] = 0.00001;
+                scales[1] = 0.00001;
+                scales[2] = 0.00001;
+            }
+            if (scales[1] > tt && scales[2] > tt){
+                scales[0] = 0.00001;
+                scales[1] = 0.00001;
+                scales[2] = 0.00001;
+            }
+            if (scales[0] > tt && scales[2] > tt){
+                scales[0] = 0.00001;
+                scales[1] = 0.00001;
+                scales[2] = 0.00001;
             }
 
             position[0] = attrs.x;
