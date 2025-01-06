@@ -729,8 +729,8 @@ void main () {
     float B = exp(A) * vColor.a;
     float BB = 0.0;
     if (uThresholdEnabled > 0.5) {
-        BB = B > 0.1 ? 1.0 : 0.0;
-        fragColor = vec4(exp(0.2 * A) * BB * vColor.rgb, BB);
+        BB = B > 0.1 ? max(0.4, B) : 0.0;
+        fragColor = vec4(exp(0.1 * A) * BB * vColor.rgb, BB);
     } else {
         fragColor = vec4(B * vColor.rgb, B);
     }
