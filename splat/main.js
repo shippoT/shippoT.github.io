@@ -583,11 +583,6 @@ function createWorker(self) {
                 scales[0] = Math.exp(attrs.scale_0);
                 scales[1] = Math.exp(attrs.scale_1);
                 scales[2] = Math.exp(attrs.scale_2);
-                if (scales[0] > 0.1 && scales[1] > 0.1) {
-                    scales[0] = 0.001;
-                    scales[1] = 0.001;
-                    scales[2] = 0.001;
-                }
             } else {
                 scales[0] = 0.01;
                 scales[1] = 0.01;
@@ -724,15 +719,20 @@ precision highp float;
 
 in vec4 vColor;
 in vec2 vPosition;
-
+uniform float uThresholdEnabled;
 out vec4 fragColor;
+
 
 void main () {
     float A = -dot(vPosition, vPosition);
     if (A < -4.0) discard;
     float B = exp(A) * vColor.a;
-    float BB = B > 0.2 ? 1.0 : 0.0;
-    fragColor = vec4(exp(A) * BB * vColor.rgb, BB);
+    if (uThresholdEnabled > 0.5) {
+        BB = B > 0.2 ? 1.0 : 0.0;
+        fragColor = vec4(exp(A) * BB * vColor.rgb, BB);
+    } else {
+        fragColor = vec4(B * vColor.rgb, B);
+    }
 }
 
 `.trim();
@@ -850,6 +850,18 @@ async function main() {
     gl.vertexAttribIPointer(a_index, 1, gl.INT, false, 0, 0);
     gl.vertexAttribDivisor(a_index, 1);
 
+    const uThresholdEnabledLocation = gl.getUniformLocation(program, "uThresholdEnabled");
+
+    gl.uniform1f(uThresholdEnabledLocation, checkbox.checked ? 1.0 : 0.0);
+
+    checkbox.addEventListener("change", () => {
+        const thresholdEnabled = checkbox.checked ? 1.0 : 0.0;
+        gl.uniform1f(uThresholdEnabledLocation, thresholdEnabled);
+        // gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    });
+    
     const resize = () => {
         gl.uniform2fv(u_focal, new Float32Array([camera.fx, camera.fy]));
 
