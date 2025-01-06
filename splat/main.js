@@ -594,18 +594,17 @@ function createWorker(self) {
                 rot[2] = 0;
                 rot[3] = 0;
             }
-            float tt = 0.4;
-            if (scales[0] > tt && scales[1] > tt){
+            if (scales[0] > 0.5 && scales[1] > 0.5){
                 scales[0] = 0.00001;
                 scales[1] = 0.00001;
                 scales[2] = 0.00001;
             }
-            if (scales[1] > tt && scales[2] > tt){
+            if (scales[1] > 0.5 && scales[2] > 0.5){
                 scales[0] = 0.00001;
                 scales[1] = 0.00001;
                 scales[2] = 0.00001;
             }
-            if (scales[0] > tt && scales[2] > tt){
+            if (scales[0] > 0.5 && scales[2] > 0.5){
                 scales[0] = 0.00001;
                 scales[1] = 0.00001;
                 scales[2] = 0.00001;
