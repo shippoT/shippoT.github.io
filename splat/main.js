@@ -588,6 +588,16 @@ function createWorker(self) {
                     scales[1] = 0.00001;
                     scales[2] = 0.00001;
                 }
+                if (scales[1] > 0.5 && scales[2] > 0.5){
+                    scales[0] = 0.00001;
+                    scales[1] = 0.00001;
+                    scales[2] = 0.00001;
+                }
+                if (scales[0] > 0.5 && scales[2] > 0.5){
+                    scales[0] = 0.00001;
+                    scales[1] = 0.00001;
+                    scales[2] = 0.00001;
+                }
             } else {
                 scales[0] = 0.01;
                 scales[1] = 0.01;
