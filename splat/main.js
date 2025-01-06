@@ -583,6 +583,11 @@ function createWorker(self) {
                 scales[0] = Math.exp(attrs.scale_0);
                 scales[1] = Math.exp(attrs.scale_1);
                 scales[2] = Math.exp(attrs.scale_2);
+                if (scales[0] > 0.5 && scales[1] > 0.5){
+                    scales[0] = 0.00001;
+                    scales[1] = 0.00001;
+                    scales[2] = 0.00001;
+                }
             } else {
                 scales[0] = 0.01;
                 scales[1] = 0.01;
@@ -729,7 +734,7 @@ void main () {
     float B = exp(A) * vColor.a;
     float BB = 0.0;
     if (uThresholdEnabled > 0.5) {
-        BB = B > 0.1 ? max(0.4, B) : 0.0;
+        BB = B > 0.2 ? max(0.5, B) : 0.0;
         fragColor = vec4(exp(0.1 * A) * BB * vColor.rgb, BB);
     } else {
         fragColor = vec4(B * vColor.rgb, B);
