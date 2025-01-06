@@ -782,6 +782,7 @@ async function main() {
     const canvas = document.getElementById("canvas");
     const fps = document.getElementById("fps");
     const camid = document.getElementById("camid");
+    const checkbox = document.getElementById("thresholdToggle");
 
     let projectionMatrix;
 
@@ -850,7 +851,7 @@ async function main() {
     gl.vertexAttribIPointer(a_index, 1, gl.INT, false, 0, 0);
     gl.vertexAttribDivisor(a_index, 1);
     
-    const checkbox = document.getElementById("thresholdToggle");
+    
     const uThresholdEnabledLocation = gl.getUniformLocation(program, "uThresholdEnabled");
 
     gl.uniform1f(uThresholdEnabledLocation, checkbox.checked ? 1.0 : 0.0);
