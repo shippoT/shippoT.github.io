@@ -736,6 +736,7 @@ precision highp float;
 in vec4 vColor;
 in vec2 vPosition;
 uniform float uThresholdEnabled;
+uniform float uThreshold;
 out vec4 fragColor;
 
 
@@ -745,7 +746,7 @@ void main () {
     float B = exp(A) * vColor.a;
     float BB = 0.0;
     if (uThresholdEnabled > 0.5) {
-        BB = B > 0.2 ? max(0.5, B) : 0.0;
+        BB = B > uThreshold ? max(0.5, B) : 0.0;
         fragColor = vec4(exp(0.1 * A) * BB * vColor.rgb, BB);
     } else {
         fragColor = vec4(B * vColor.rgb, B);
@@ -800,6 +801,8 @@ async function main() {
     const fps = document.getElementById("fps");
     const camid = document.getElementById("camid");
     const checkbox = document.getElementById("thresholdToggle");
+    const thresholdSlider = document.getElementById("threshold");
+    const thresholdValueDisplay = document.getElementById("thresholdValue");
 
     let projectionMatrix;
 
@@ -870,6 +873,17 @@ async function main() {
     
     
     const uThresholdEnabledLocation = gl.getUniformLocation(program, "uThresholdEnabled");
+    const uThresholdLocation = gl.getUniformLocation(program, "uThreshold");
+    let threshold = 0.2;
+    gl.uniform1f(uThresholdLocation, threshold);
+
+    thresholdSlider.addEventListener("input", (e) => {
+        threshold = parseFloat(e.target.value);
+        thresholdValueDisplay.textContent = threshold.toFixed(2);
+        gl.uniform1f(uThresholdLocation, threshold);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    });
 
     gl.uniform1f(uThresholdEnabledLocation, checkbox.checked ? 1.0 : 0.0);
 
