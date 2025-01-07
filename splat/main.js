@@ -807,7 +807,7 @@ async function main() {
     const thresholdSlider = document.getElementById("threshold");
     const thresholdValueDisplay = document.getElementById("thresholdValue");
 
-    const overlapToggle = document.getElementById("overlap");
+    const overlapTg = document.getElementById("overlap");
     
 
 
@@ -897,7 +897,7 @@ async function main() {
     const uEnableOverlapLocation = gl.getUniformLocation(program, "uEnableOverlap");
     let enableOverlap = 0; 
     gl.uniform1f(uEnableOverlapLocation, enableOverlap);
-    overlapToggle.addEventListener("change", (e) => {
+    overlapTg.addEventListener("change", (e) => {
         enableOverlap = e.target.checked ? 1 : 0;
         gl.uniform1f(uEnableOverlapLocation, enableOverlap);
         gl.clear(gl.COLOR_BUFFER_BIT);
