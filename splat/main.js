@@ -737,6 +737,7 @@ in vec4 vColor;
 in vec2 vPosition;
 uniform float uThresholdEnabled;
 uniform float uThreshold;
+uniform float uEnableOverlap;
 out vec4 fragColor;
 
 
@@ -747,8 +748,10 @@ void main () {
     float BB = 0.0;
     if (uThresholdEnabled > 0.5) {
         BB = B > uThreshold ? max(0.5, B) : 0.0;
+        if (uEnableOverlap > 0.5) vcolor.r += 0.5 * BB;
         fragColor = vec4(exp(0.1 * A) * BB * vColor.rgb, BB);
     } else {
+        if (uEnableOverlap > 0.5) vcolor.r += 0.5 * B;
         fragColor = vec4(B * vColor.rgb, B);
     }
 }
@@ -803,6 +806,12 @@ async function main() {
     const checkbox = document.getElementById("thresholdToggle");
     const thresholdSlider = document.getElementById("threshold");
     const thresholdValueDisplay = document.getElementById("thresholdValue");
+
+    const overlapToggle = document.getElementById("overlap");
+    const uEnableOverlapLocation = gl.getUniformLocation(program, "uEnableOverlap");
+    let enableOverlap = 0; 
+    gl.uniform1f(uEnableOverlapLocation, enableOverlap);
+
 
     let projectionMatrix;
 
