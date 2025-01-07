@@ -594,21 +594,21 @@ function createWorker(self) {
                 rot[2] = 0;
                 rot[3] = 0;
             }
-            if (scales[0] > 0.5 && scales[1] > 0.5){
-                scales[0] = 0.00001;
-                scales[1] = 0.00001;
-                scales[2] = 0.00001;
-            }
-            if (scales[1] > 0.5 && scales[2] > 0.5){
-                scales[0] = 0.00001;
-                scales[1] = 0.00001;
-                scales[2] = 0.00001;
-            }
-            if (scales[0] > 0.5 && scales[2] > 0.5){
-                scales[0] = 0.00001;
-                scales[1] = 0.00001;
-                scales[2] = 0.00001;
-            }
+            // if (scales[0] > 0.5 && scales[1] > 0.5){
+            //     scales[0] = 0.00001;
+            //     scales[1] = 0.00001;
+            //     scales[2] = 0.00001;
+            // }
+            // if (scales[1] > 0.5 && scales[2] > 0.5){
+            //     scales[0] = 0.00001;
+            //     scales[1] = 0.00001;
+            //     scales[2] = 0.00001;
+            // }
+            // if (scales[0] > 0.5 && scales[2] > 0.5){
+            //     scales[0] = 0.00001;
+            //     scales[1] = 0.00001;
+            //     scales[2] = 0.00001;
+            // }
 
             position[0] = attrs.x;
             position[1] = attrs.y;
