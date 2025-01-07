@@ -808,9 +808,7 @@ async function main() {
     const thresholdValueDisplay = document.getElementById("thresholdValue");
 
     const overlapToggle = document.getElementById("overlap");
-    const uEnableOverlapLocation = gl.getUniformLocation(program, "uEnableOverlap");
-    let enableOverlap = 0; 
-    gl.uniform1f(uEnableOverlapLocation, enableOverlap);
+    
 
 
     let projectionMatrix;
@@ -841,6 +839,10 @@ async function main() {
         console.error(gl.getProgramInfoLog(program));
 
     gl.disable(gl.DEPTH_TEST); // Disable depth testing
+
+    const uEnableOverlapLocation = gl.getUniformLocation(program, "uEnableOverlap");
+    let enableOverlap = 0; 
+    gl.uniform1f(uEnableOverlapLocation, enableOverlap);
 
     // Enable blending
     gl.enable(gl.BLEND);
