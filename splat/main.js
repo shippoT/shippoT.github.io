@@ -840,9 +840,7 @@ async function main() {
 
     gl.disable(gl.DEPTH_TEST); // Disable depth testing
 
-    const uEnableOverlapLocation = gl.getUniformLocation(program, "uEnableOverlap");
-    let enableOverlap = 0; 
-    gl.uniform1f(uEnableOverlapLocation, enableOverlap);
+    
 
     // Enable blending
     gl.enable(gl.BLEND);
@@ -892,6 +890,17 @@ async function main() {
         threshold = parseFloat(e.target.value);
         thresholdValueDisplay.textContent = threshold.toFixed(2);
         gl.uniform1f(uThresholdLocation, threshold);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    });
+
+    const uEnableOverlapLocation = gl.getUniformLocation(program, "uEnableOverlap");
+    let enableOverlap = 0; 
+    gl.uniform1f(uEnableOverlapLocation, enableOverlap);
+    const overlapToggle = document.getElementById("overlapToggle");
+    overlapToggle.addEventListener("change", (e) => {
+        enableOverlap = e.target.checked ? 1 : 0;
+        gl.uniform1f(uEnableOverlapLocation, enableOverlap);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     });
