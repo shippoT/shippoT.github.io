@@ -748,10 +748,8 @@ void main () {
     float BB = 0.0;
     if (uThresholdEnabled > 0.5) {
         BB = B > uThreshold ? max(0.5, B) : 0.0;
-        // if (uEnableOverlap > 0.5) vColor.r += 0.5 * BB;
         fragColor = vec4(exp(0.1 * A) * BB * vColor.rgb, BB);
     } else {
-        // if (uEnableOverlap > 0.5) vColor.r += 0.5 * B;
         fragColor = vec4(B * vColor.rgb, B);
     }
 }
