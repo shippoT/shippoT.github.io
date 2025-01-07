@@ -897,7 +897,6 @@ async function main() {
     const uEnableOverlapLocation = gl.getUniformLocation(program, "uEnableOverlap");
     let enableOverlap = 0; 
     gl.uniform1f(uEnableOverlapLocation, enableOverlap);
-    const overlapToggle = document.getElementById("overlapToggle");
     overlapToggle.addEventListener("change", (e) => {
         enableOverlap = e.target.checked ? 1 : 0;
         gl.uniform1f(uEnableOverlapLocation, enableOverlap);
