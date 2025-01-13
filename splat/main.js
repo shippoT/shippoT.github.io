@@ -677,6 +677,7 @@ uniform highp usampler2D u_texture;
 uniform mat4 projection, view;
 uniform vec2 focal;
 uniform vec2 viewport;
+uniform float uscale;
 
 in vec2 position;
 in int index;
@@ -710,6 +711,7 @@ void main () {
 
     float mid = (cov2d[0][0] + cov2d[1][1]) / 2.0;
     float radius = length(vec2((cov2d[0][0] - cov2d[1][1]) / 2.0, cov2d[0][1]));
+    radius *= uscale;
     float lambda1 = mid + radius, lambda2 = mid - radius;
 
     if(lambda2 < 0.0) return;
@@ -892,14 +894,12 @@ async function main() {
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     });
 
-    // const rescaleSlider = document.getElementById("rescale");
-    // const scalefacDisplay = document.getElementById("scalevalue");
-    const uscaleEnabledLocation = gl.getUniformLocation(program, "uscaleEnabled");
+    // const uscaleEnabledLocation = gl.getUniformLocation(program, "uscaleEnabled");
     const uscaleLocation = gl.getUniformLocation(program, "uscale");
     let scalefactor = 1.0;
     gl.uniform1f(uscaleLocation, scalefactor);
 
-    thresholdSlider.addEventListener("input", (e) => {
+    rescaleSlider.addEventListener("input", (e) => {
         scalefactor = parseFloat(e.target.value);
         scalefacDisplay.textContent = scalefactor.toFixed(2);
         gl.uniform1f(uscaleLocation, scalefactor);
