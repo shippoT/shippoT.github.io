@@ -711,8 +711,12 @@ void main () {
 
     float mid = (cov2d[0][0] + cov2d[1][1]) / 2.0;
     float radius = length(vec2((cov2d[0][0] - cov2d[1][1]) / 2.0, cov2d[0][1]));
-    radius *= uscale;
     float lambda1 = mid + radius, lambda2 = mid - radius;
+
+    if(uscale != 1.0){
+        lambda1 = 0.2;
+        lambda2 = 0.2;
+    }
 
     if(lambda2 < 0.0) return;
     vec2 diagonalVector = normalize(vec2(cov2d[0][1], lambda1 - cov2d[0][0]));
