@@ -737,7 +737,6 @@ in vec4 vColor;
 in vec2 vPosition;
 uniform float uThresholdEnabled;
 uniform float uThreshold;
-uniform float uEnableOverlap;
 out vec4 fragColor;
 
 
@@ -805,7 +804,8 @@ async function main() {
     const thresholdSlider = document.getElementById("threshold");
     const thresholdValueDisplay = document.getElementById("thresholdValue");
 
-    const overlapTg = document.getElementById("overlap");
+    const rescaleSlider = document.getElementById("rescale");
+    const scalefacDisplay = document.getElementById("scalevalue");
     
 
 
@@ -892,15 +892,30 @@ async function main() {
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     });
 
-    const uEnableOverlapLocation = gl.getUniformLocation(program, "uEnableOverlap");
-    let enableOverlap = 0; 
-    gl.uniform1f(uEnableOverlapLocation, enableOverlap);
-    overlapTg.addEventListener("change", (e) => {
-        enableOverlap = e.target.checked ? 1 : 0;
-        gl.uniform1f(uEnableOverlapLocation, enableOverlap);
+    // const rescaleSlider = document.getElementById("rescale");
+    // const scalefacDisplay = document.getElementById("scalevalue");
+    const uscaleEnabledLocation = gl.getUniformLocation(program, "uscaleEnabled");
+    const uscaleLocation = gl.getUniformLocation(program, "uscale");
+    let scalefactor = 1.0;
+    gl.uniform1f(uscaleLocation, scalefactor);
+
+    thresholdSlider.addEventListener("input", (e) => {
+        scalefactor = parseFloat(e.target.value);
+        scalefacDisplay.textContent = scalefactor.toFixed(2);
+        gl.uniform1f(uscaleLocation, scalefactor);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     });
+    
+    // const uEnableOverlapLocation = gl.getUniformLocation(program, "uEnableOverlap");
+    // let enableOverlap = 0; 
+    // gl.uniform1f(uEnableOverlapLocation, enableOverlap);
+    // overlapTg.addEventListener("change", (e) => {
+    //     enableOverlap = e.target.checked ? 1 : 0;
+    //     gl.uniform1f(uEnableOverlapLocation, enableOverlap);
+    //     gl.clear(gl.COLOR_BUFFER_BIT);
+    //     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    // });
 
     gl.uniform1f(uThresholdEnabledLocation, checkbox.checked ? 1.0 : 0.0);
 
