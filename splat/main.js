@@ -714,8 +714,8 @@ void main () {
     float lambda1 = mid + radius, lambda2 = mid - radius;
 
     if(uscale != 1.0){
-        lambda1 = 1.0 * uscale;
-        lambda2 = 1.0 * uscale;
+        lambda1 = 5.0 * uscale;
+        lambda2 = 5.0 * uscale;
     }
 
     if(lambda2 < 0.0) return;
