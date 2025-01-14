@@ -761,6 +761,24 @@ void main () {
 
 `.trim();
 
+const vertexShaderSourceMesh = `
+attribute vec3 position;
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+void main() {
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}
+`.trim();
+
+
+const fragmentShaderSourceMesh = `
+precision highp float;
+void main() {
+    gl_FragColor = vec4(1.0, 0.5, 0.2, 0.2); // Orange with 0.2 transparency for mesh
+}
+`.trim();
+
+
 let defaultViewMatrix = [
     0.47, 0.04, 0.88, 0, -0.11, 0.99, 0.02, 0, -0.88, -0.11, 0.47, 0, 0.07,
     0.03, 6.55, 1,
@@ -812,7 +830,7 @@ async function main() {
 
     const rescaleSlider = document.getElementById("rescale");
     const scalefacDisplay = document.getElementById("scalevalue");
-    
+    const gtcheckbox = document.getElementById("surfaceToggle");
 
 
     let projectionMatrix;
@@ -841,6 +859,36 @@ async function main() {
 
     if (!gl.getProgramParameter(program, gl.LINK_STATUS))
         console.error(gl.getProgramInfoLog(program));
+
+    function createShader(gl, type, source) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            console.error(gl.getShaderInfoLog(shader));
+            gl.deleteShader(shader);
+            return null;
+        }
+        return shader;
+    }
+    
+    // Utility: Create program
+    function createProgram(gl, vertexShaderSource, fragmentShaderSource) {
+        const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+        const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+        const program = gl.createProgram();
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+        gl.linkProgram(program);
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+            console.error(gl.getProgramInfoLog(program));
+            return null;
+        }
+        return program;
+    }
+
+    const meshProgram = createProgram(gl, vertexShaderSourceMesh, fragmentShaderSourceMesh);
+
 
     gl.disable(gl.DEPTH_TEST); // Disable depth testing
 
@@ -922,10 +970,19 @@ async function main() {
     // });
 
     gl.uniform1f(uThresholdEnabledLocation, checkbox.checked ? 1.0 : 0.0);
+    gl.uniform1f(usurfaceEnabledLocation, gtcheckbox.checked ? 1.0 : 0.0);
 
     checkbox.addEventListener("change", () => {
         const thresholdEnabled = checkbox.checked ? 1.0 : 0.0;
         gl.uniform1f(uThresholdEnabledLocation, thresholdEnabled);
+        // gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    });
+
+    gtcheckbox.addEventListener("change", () => {
+        const surfaceEnabled = gtcheckbox.checked ? 1.0 : 0.0;
+        gl.uniform1f(usurfaceEnabledLocation, surfaceEnabled);
         // gl.clearColor(0.0, 0.0, 0.0, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
