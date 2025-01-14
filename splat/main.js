@@ -969,6 +969,7 @@ async function main() {
     //     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     // });
 
+    const usurfaceEnabledLocation = gl.getUniformLocation(program, "usurfaceEnabled");
     gl.uniform1f(uThresholdEnabledLocation, checkbox.checked ? 1.0 : 0.0);
     gl.uniform1f(usurfaceEnabledLocation, gtcheckbox.checked ? 1.0 : 0.0);
 
