@@ -636,7 +636,7 @@ function createWorker(self) {
         console.timeEnd("build buffer");
 
         const faces = [];
-        let faceOffset = header_end_index + header_end.length + vertexCount * rowOffset;
+        let faceOffset = header_end_index + header_end.length + vertexCount * row_offset;
         for (let i = 0; i < faceCount; i++) {
             const vertexCount = dataView.getUint8(faceOffset);
             faceOffset += 1;
