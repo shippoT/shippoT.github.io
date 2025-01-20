@@ -648,7 +648,7 @@ function createWorker(self) {
             faces.push(indices);
         }
         console.log("Faces processed:", faces);
-        return buffer;
+        return {buffer, faces};
     }
 
     const throttledSort = () => {
@@ -670,9 +670,9 @@ function createWorker(self) {
         if (e.data.ply) {
             vertexCount = 0;
             runSort(viewProj);
-            buffer = processPlyBuffer(e.data.ply);
+            const { buffer, faces } = processPlyBuffer(e.data.ply);
             vertexCount = Math.floor(buffer.byteLength / rowLength);
-            postMessage({ buffer: buffer, save: !!e.data.save });
+            postMessage({ buffer: buffer, faces: faces, save: !!e.data.save });
         } else if (e.data.buffer) {
             buffer = e.data.buffer;
             vertexCount = e.data.vertexCount;
@@ -1621,6 +1621,7 @@ async function main() {
             if (!isPly(splatData)) {
                 worker.postMessage({
                     buffer: splatData.buffer,
+                    faces: splatData.faces,
                     vertexCount: Math.floor(bytesRead / rowLength),
                 });
             }
@@ -1634,6 +1635,7 @@ async function main() {
         } else {
             worker.postMessage({
                 buffer: splatData.buffer,
+                faces: splatData.faces,
                 vertexCount: Math.floor(bytesRead / rowLength),
             });
         }
