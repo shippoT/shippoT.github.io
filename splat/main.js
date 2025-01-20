@@ -626,6 +626,10 @@ function createWorker(self) {
                 rgba[0] = attrs.red;
                 rgba[1] = attrs.green;
                 rgba[2] = attrs.blue;
+            } else {
+                rgba[0] = 0;
+                rgba[1] = 0;
+                rgba[2] = 0;
             }
             if (types["opacity"]) {
                 rgba[3] = (1 / (1 + Math.exp(-attrs.opacity))) * 255;
