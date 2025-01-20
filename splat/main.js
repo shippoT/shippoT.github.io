@@ -507,6 +507,10 @@ function createWorker(self) {
             row_offset += parseInt(arrayType.replace(/[^\d]/g, "")) / 8;
         }
         console.log("Bytes per row", row_offset, types, offsets);
+        const vertexSize = vertexProperties.reduce((size, prop) => {
+            const TYPE_MAP = { float: 4, double: 8, int: 4, uchar: 1 };
+            return size + (TYPE_MAP[prop.type] || 0);
+        }, 0);
 
         let dataView = new DataView(
             inputBuffer,
@@ -635,23 +639,17 @@ function createWorker(self) {
         }
         console.timeEnd("build buffer");
 
-        let faces = null;
-        if (faceCount > 0) {
-            const faceStartIndex = header_end_index + header_end.length + vertexCount * row_offset;
-            const faceDataView = new DataView(inputBuffer, faceStartIndex);
-            let faceOffset = 0;
-    
-            faces = new Uint32Array(faceCount * 3); // Assuming triangular faces
-            for (let i = 0; i < faceCount; i++) {
-                const vertexPerFace = faceDataView.getUint8(faceOffset);
-                if (vertexPerFace !== 3) {
-                    throw new Error("Only triangular faces are supported");
-                }
-                faces[i * 3] = faceDataView.getUint32(faceOffset + 1, true);
-                faces[i * 3 + 1] = faceDataView.getUint32(faceOffset + 5, true);
-                faces[i * 3 + 2] = faceDataView.getUint32(faceOffset + 9, true);
-                faceOffset += 13; // 1 byte for count + 3 * 4 bytes for indices
+        const faces = [];
+        let faceOffset = header_end_index + header_end.length + vertexCount * vertexSize;
+        for (let i = 0; i < faceCount; i++) {
+            const vertexCount = dataView.getUint8(faceOffset);
+            faceOffset += 1;
+            const indices = [];
+            for (let j = 0; j < vertexCount; j++) {
+                indices.push(dataView.getInt32(faceOffset, true));
+                faceOffset += 4;
             }
+            faces.push(indices);
         }
         console.log("Faces processed:", faces);
         return buffer;
