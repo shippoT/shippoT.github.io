@@ -507,10 +507,6 @@ function createWorker(self) {
             row_offset += parseInt(arrayType.replace(/[^\d]/g, "")) / 8;
         }
         console.log("Bytes per row", row_offset, types, offsets);
-        const vertexSize = vertexProperties.reduce((size, prop) => {
-            const TYPE_MAP = { float: 4, double: 8, int: 4, uchar: 1 };
-            return size + (TYPE_MAP[prop.type] || 0);
-        }, 0);
 
         let dataView = new DataView(
             inputBuffer,
@@ -640,7 +636,7 @@ function createWorker(self) {
         console.timeEnd("build buffer");
 
         const faces = [];
-        let faceOffset = header_end_index + header_end.length + vertexCount * vertexSize;
+        let faceOffset = header_end_index + header_end.length + vertexCount * rowOffset;
         for (let i = 0; i < faceCount; i++) {
             const vertexCount = dataView.getUint8(faceOffset);
             faceOffset += 1;
