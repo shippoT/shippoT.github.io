@@ -623,10 +623,6 @@ function createWorker(self) {
                 rgba[1] = (0.5 + SH_C0 * attrs.f_dc_1) * 255;
                 rgba[2] = (0.5 + SH_C0 * attrs.f_dc_2) * 255;
             } else {
-                rgba[0] = attrs.red;
-                rgba[1] = attrs.green;
-                rgba[2] = attrs.blue;
-            } else {
                 rgba[0] = 0;
                 rgba[1] = 0;
                 rgba[2] = 0;
@@ -658,7 +654,7 @@ function createWorker(self) {
             }
         }
         console.log("Faces processed:", faces);
-        return {buffer, faces};
+        return buffer;
     }
 
     const throttledSort = () => {
@@ -680,7 +676,7 @@ function createWorker(self) {
         if (e.data.ply) {
             vertexCount = 0;
             runSort(viewProj);
-            buffer, faces = processPlyBuffer(e.data.ply);
+            buffer = processPlyBuffer(e.data.ply);
             vertexCount = Math.floor(buffer.byteLength / rowLength);
             postMessage({ buffer: buffer, save: !!e.data.save });
         } else if (e.data.buffer) {
