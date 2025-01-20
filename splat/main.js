@@ -480,7 +480,10 @@ function createWorker(self) {
         if (header_end_index < 0)
             throw new Error("Unable to read .ply file header");
         const vertexCount = parseInt(/element vertex (\d+)\n/.exec(header)[1]);
+        const faceCount = parseInt(/element face (\d+)\n/.exec(header)?.[1] || 0);
+
         console.log("Vertex Count", vertexCount);
+        console.log("Face Count:", faceCount);
         let row_offset = 0,
             offsets = {},
             types = {};
@@ -631,7 +634,27 @@ function createWorker(self) {
             }
         }
         console.timeEnd("build buffer");
-        return buffer;
+
+        let faces = null;
+        if (faceCount > 0) {
+            const faceStartIndex = header_end_index + header_end.length + vertexCount * row_offset;
+            const faceDataView = new DataView(inputBuffer, faceStartIndex);
+            let faceOffset = 0;
+    
+            faces = new Uint32Array(faceCount * 3); // Assuming triangular faces
+            for (let i = 0; i < faceCount; i++) {
+                const vertexPerFace = faceDataView.getUint8(faceOffset);
+                if (vertexPerFace !== 3) {
+                    throw new Error("Only triangular faces are supported");
+                }
+                faces[i * 3] = faceDataView.getUint32(faceOffset + 1, true);
+                faces[i * 3 + 1] = faceDataView.getUint32(faceOffset + 5, true);
+                faces[i * 3 + 2] = faceDataView.getUint32(faceOffset + 9, true);
+                faceOffset += 13; // 1 byte for count + 3 * 4 bytes for indices
+            }
+        }
+        console.log("Faces processed:", faces);
+        return {buffer, faces};
     }
 
     const throttledSort = () => {
@@ -653,7 +676,7 @@ function createWorker(self) {
         if (e.data.ply) {
             vertexCount = 0;
             runSort(viewProj);
-            buffer = processPlyBuffer(e.data.ply);
+            buffer, faces = processPlyBuffer(e.data.ply);
             vertexCount = Math.floor(buffer.byteLength / rowLength);
             postMessage({ buffer: buffer, save: !!e.data.save });
         } else if (e.data.buffer) {
