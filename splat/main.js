@@ -1573,11 +1573,11 @@ async function main() {
 
                 if (isPly(gtData)) {
                     // ply file magic header means it should be handled differently
-                    worker.postMessage({ ply: splatData.buffer, save: true });
+                    worker.postMessage({ ply: gtData.buffer, save: true });
                 } else {
                     worker.postMessage({
-                        buffer: splatData.buffer,
-                        vertexCount: Math.floor(splatData.length / rowLength),
+                        buffer: gtData.buffer,
+                        vertexCount: Math.floor(gtData.length / rowLength),
                     });
                 }
             };
