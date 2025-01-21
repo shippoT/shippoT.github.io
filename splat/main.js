@@ -1566,6 +1566,22 @@ async function main() {
                 console.log("Loaded Cameras");
             };
             fr.readAsText(file);
+        } else if (/^gt.*\.ply$/i.test(file.name)) {
+            fr.onload = () => {
+                gtData = new Uint8Array(fr.result);
+                // console.log("Loaded", Math.floor(gtData.length / rowLength));
+
+                if (isPly(gtData)) {
+                    // ply file magic header means it should be handled differently
+                    worker.postMessage({ ply: splatData.buffer, save: true });
+                } else {
+                    worker.postMessage({
+                        buffer: splatData.buffer,
+                        vertexCount: Math.floor(splatData.length / rowLength),
+                    });
+                }
+            };
+            fr.readAsArrayBuffer(file);
         } else {
             stopLoading = true;
             fr.onload = () => {
