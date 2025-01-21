@@ -635,20 +635,20 @@ function createWorker(self) {
         }
         console.timeEnd("build buffer");
 
-        // const faces = [];
-        // let faceOffset = header_end_index + header_end.length + 12 * row_offset;
-        // for (let i = 0; i < faceCount; i++) {
-        //     const vertexCount = dataView.getUint8(faceOffset);
-        //     faceOffset += 1;
-        //     const indices = [];
-        //     for (let j = 0; j < vertexCount; j++) {
-        //         indices.push(dataView.getInt32(faceOffset, true));
-        //         faceOffset += 4;
-        //     }
-        //     faces.push(indices);
-        // }
-        // console.log("Faces processed:", faces);
-        return buffer;
+        const faces = [];
+        let faceOffset = header_end_index + header_end.length + 12 * row_offset;
+        for (let i = 0; i < faceCount; i++) {
+            const vertexCount = dataView.getUint8(faceOffset);
+            faceOffset += 1;
+            const indices = [];
+            for (let j = 0; j < vertexCount; j++) {
+                indices.push(dataView.getInt32(faceOffset, true));
+                faceOffset += 4;
+            }
+            faces.push(indices);
+        }
+        console.log("Faces processed:", faces);
+        return {buffer, faces};
     }
 
     const throttledSort = () => {
@@ -670,7 +670,7 @@ function createWorker(self) {
         if (e.data.ply) {
             vertexCount = 0;
             runSort(viewProj);
-            buffer = processPlyBuffer(e.data.ply);
+            buffer, faces = processPlyBuffer(e.data.ply);
             vertexCount = Math.floor(buffer.byteLength / rowLength);
             postMessage({ buffer: buffer, save: !!e.data.save });
         } else if (e.data.buffer) {
